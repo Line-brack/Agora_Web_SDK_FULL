@@ -46,14 +46,17 @@ $("#join-form").submit(async function (e) {
     const channel = $("#channel").val();
     const uid=options.uid;
     console.log("request token")
+    options.channel=channel;
     const {token,appid}=await getToken(uid,channel);
     console.log("success get token")
     
-    options.channel=channel;
+    
     options.token=token;
     options.appid=appid;
 
     await join();
+
+    socket.emit("updateRoom",{"uid":options.uid,"flag":"join"})
   
     if(options.token) {
       $("#success-alert-with-token").css("display", "block");

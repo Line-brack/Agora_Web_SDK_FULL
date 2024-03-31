@@ -9,8 +9,8 @@ class Meta2D{
 
     }
     initialize(){//canvasと人の配置
-        const width=window.innerWidth/2.0;
-        const height=window.innerHeight/2.0;
+        const width=600;
+        const height=400;
         this.initRoom(width,height)
         this.persons=[]//renderに使うユーザのリスト
     }
@@ -107,7 +107,7 @@ class Meta2D{
             // userIDが空の場合登録
             if(userID!=null){
                 options.uid=userID;
-                this.persons=[{"x":0,"y":0,"uid":userID}]
+                this.persons=[{"x":this.canvas.width/2,"y":this.canvas.height/2,"uid":userID}]
             }
             this.render()
         });

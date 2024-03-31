@@ -48,6 +48,25 @@ io.on("connection",(socket)=>{
         rooms[roomid]=rooms[roomid].filter(usr=>usr.uid!=uid);//roomsから消去
         const user=users.filter(usr => usr.uid ==uid)[0];
         user.room=null;//部屋の登録を削除
+        //退出前のルームを更新
+        io.emit("userMoved", {
+            "persons":
+            rooms[roomid].map(user=>({
+                "x":user.x,
+                "y":user.y,
+                "uid":user.uid
+            })),
+            "room":roomid,
+        });
+        //退出するユーザの位置を更新
+        socket.emit("userMoved",{
+            "persons":[{
+                "x":user.x,
+                "y":user.y,
+                "uid":user.uid
+            }],
+            "room":null,
+            })
     })
 
     // クライアントからの切断時の処理
@@ -185,6 +204,21 @@ app.post("/token",(req,res)=>{
         rooms[roomid].push(user);//ルームと紐づける
         console.log("success:token request")
         //console.log("fuga",user)
+        //ルームを更新
+        console.log("room updated",rooms[roomid].map(user=>({
+            "x":user.x,
+            "y":user.y,
+            "uid":user.uid
+        })))
+        io.emit("userMoved", {
+            "persons":
+            rooms[roomid].map(user=>({
+                "x":user.x,
+                "y":user.y,
+                "uid":user.uid
+            })),
+            "room":roomid,
+        });
     }
     console.log(roomid,rooms[roomid].map(usr=>usr.uid))
 });
